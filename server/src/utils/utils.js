@@ -8,10 +8,9 @@ const filteredQuotes = (quotes) => {
       id: quote._id.toString(),
       authorName: quote.authorName,
       text: quote.text,
+      creator: quote.creator,
     };
   });
 };
 
-var regex = (str) => new RegExp(['^', str, '$'].join(''), 'i');
-
-module.exports = { isStr, filteredQuotes, regex };
+module.exports = { isStr, filteredQuotes };

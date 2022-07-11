@@ -42,4 +42,12 @@ export default makeStyles(() => ({
   btn: {
     margin: "20px",
   },
+  profile: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  name: {
+    marginRight: "10px",
+  },
 }));

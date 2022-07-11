@@ -12,6 +12,7 @@ const Quote = {
     id: { type: 'string' },
     authorName: { type: 'string' },
     text: { type: 'string' },
+    creator: { type: 'string' },
   },
 };
 
@@ -43,11 +44,12 @@ const createQuoteOpts = {
   schema: {
     body: {
       type: 'object',
-      required: ['authorName', 'text'],
+      required: ['authorName', 'text', 'creator'],
       properties: {
         id: { type: 'string' },
         authorName: { type: 'string' },
         text: { type: 'string' },
+        creator: { type: 'string' },
       },
     },
     response: {

@@ -4,9 +4,12 @@ import { TextField, Button, Typography, Paper } from "@mui/material";
 import { createQuote, updateQuote } from "../../actions/quotesAction";
 import useStyles from "./styles";
 
-export default function Form({ setCurrentId, currentId }) {
+export default function Form({ setCurrentId, currentId, name }) {
   const dispatch = useDispatch();
-  const [quoteData, setQuoteData] = useState({ authorName: "", text: "" });
+  const [quoteData, setQuoteData] = useState({
+    authorName: "",
+    text: "",
+  });
   const classes = useStyles();
   const updatedQuote = useSelector((state) =>
     currentId ? state.quotes.find((q) => q.id === currentId) : null
@@ -22,9 +25,11 @@ export default function Form({ setCurrentId, currentId }) {
     e.preventDefault();
     if (currentId) {
       dispatch(updateQuote(currentId, quoteData));
+      window.location.reload();
     } else {
-      dispatch(createQuote(quoteData));
+      dispatch(createQuote({ ...quoteData, creator: name }));
     }
+
     clear();
   };
 

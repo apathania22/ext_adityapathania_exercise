@@ -5,20 +5,27 @@ import { CircularProgress, Grid } from "@mui/material";
 import QuoteCard from "./QuoteCard/QuoteCard";
 
 const randomInteger = () => Math.floor(Math.random() * (100 - 1 + 1) + 1);
-const PUBLIC_API_URL =
-  "https://acf-ts-quotes-api-kfu8a.ondigitalocean.app/api/quotes?page=";
 
-export default function Quotes({ setCurrentId, isAuthenticated, isSearch }) {
+export default function Quotes({
+  setCurrentId,
+  isAuthenticated,
+  isSearch,
+  user,
+}) {
   const [publicQuotes, setPublicData] = useState([]);
   const quotes = useSelector((state) => state.quotes);
   const randomInt = randomInteger();
+
+  console.log(quotes);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const {
           data: { results },
-        } = await axios.get(`${PUBLIC_API_URL}${randomInt}`);
+        } = await axios.get(
+          `${process.env.REACT_APP_PUBLIC_AP_URL}${randomInt}`
+        );
         setPublicData(results);
       } catch (err) {
         console.log(err);
@@ -45,7 +52,7 @@ export default function Quotes({ setCurrentId, isAuthenticated, isSearch }) {
         : publicQuotesWithFlag
       ).map((quote) => (
         <Grid key={quote.id} item xs={12} sm={6} md={6}>
-          <QuoteCard quote={quote} setCurrentId={setCurrentId} />
+          <QuoteCard quote={quote} setCurrentId={setCurrentId} user={user} />
         </Grid>
       ))}
     </Grid>

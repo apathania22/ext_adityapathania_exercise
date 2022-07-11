@@ -1,7 +1,7 @@
 ﻿const Quote = require('../models/quote.js');
 const Joi = require('joi');
 const mongoose = require('mongoose');
-const { isStr, filteredQuotes, regex } = require('../utils/utils.js');
+const { isStr, filteredQuotes } = require('../utils/utils.js');
 
 /**
  * Get list of all quotes from the database
@@ -13,7 +13,10 @@ const getQuotes = async (req, reply) => {
     // check if the query has authorName
     if (req.query.authorName) {
       // retrieve quotes by authorName
-      quotes = await Quote.find({ authorName: regex });
+      quotes = await Quote.find({
+        authorName: { $regex: `^${req.query.authorName}$`, $options: 'i' },
+      });
+      console.log(quotes);
       if (!quotes.length) throw { message: 'No results found' };
     } else {
       // retrieve all quotes
@@ -48,9 +51,10 @@ const createQuote = async (req, reply) => {
   const schema = Joi.object({
     authorName: Joi.string().min(3).required(),
     text: Joi.string().required(),
+    creator: Joi.string(),
   });
 
-  const { authorName, text } = req.body;
+  const { authorName, text, creator } = req.body;
 
   if (isStr(authorName) || isStr(text))
     return reply.code(400).send({ errorMessage: 'Provided input is not a string' });
@@ -59,13 +63,13 @@ const createQuote = async (req, reply) => {
   const { error } = schema.validate({ authorName, text });
   if (error) return reply.code(400).send({ errorMessage: error.details[0].message });
 
-  const newQuote = new Quote({ authorName, text });
+  const newQuote = new Quote({ authorName, text, creator });
 
   try {
     await newQuote.save();
     const id = newQuote._id.toString();
 
-    reply.code(201).send({ id, authorName, text });
+    reply.code(201).send({ id, authorName, text, creator });
   } catch (error) {
     reply.code(404).send({ errorMessage: error.message });
   }
@@ -115,7 +119,7 @@ const deleteQuote = async (req, reply) => {
   if (!isValidQuote) return reply.code(404).send({ errorMessage: `Invalid id: ${id}` });
 
   await Quote.findByIdAndRemove(id);
-  reply.send({ errorMessage: 'Quote deleted successfully.' });
+  reply.send({ message: 'Quote deleted successfully.' });
 };
 
 module.exports = {

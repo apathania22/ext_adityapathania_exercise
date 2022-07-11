@@ -9,16 +9,18 @@ import App from "./App";
 
 import { reducers } from "./reducers";
 
-// const domain = process.env.REACT_APP_AUTH0_DOMAIN;
-// const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+const clientId = process.env.REACT_APP_CLIENT_ID;
+const audience = process.env.REACT_APP_AUDIENCE;
+const domain = process.env.REACT_APP_DOMAIN;
 
 const store = createStore(reducers, compose(applyMiddleware(thunk)));
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Auth0Provider
-    domain="apathania.us.auth0.com"
-    clientId="1w3Dvd1hdvOlYyEykfaHf6GwOkal394z"
+    domain={domain}
+    clientId={clientId}
+    audience={audience}
     redirectUri={window.location.origin}
   >
     <Provider store={store}>

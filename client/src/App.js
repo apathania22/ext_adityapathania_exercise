@@ -23,17 +23,27 @@ import useStyles from "./styles";
 
 function App() {
   const dispatch = useDispatch();
-  const { isAuthenticated, isLoading } = useAuth0();
+  const { isAuthenticated, isLoading, getAccessTokenSilently, user } =
+    useAuth0();
   const [currentId, setCurrentId] = useState(null);
   const [isSearch, setIsSearch] = useState(false);
   const [query, setQuery] = useState("");
   const classes = useStyles();
 
   useEffect(() => {
-    if (!query) {
-      dispatch(getQuotes());
-    }
-  }, [currentId, dispatch, query]);
+    const getPrivateQuotes = async () => {
+      try {
+        const accessToken = await getAccessTokenSilently();
+        localStorage.setItem("accessToken", accessToken);
+        if (!query) {
+          dispatch(getQuotes());
+        }
+      } catch (e) {
+        console.log(e.message);
+      }
+    };
+    getPrivateQuotes();
+  }, [getAccessTokenSilently, currentId, dispatch, query]);
 
   if (isLoading) {
     return <CircularProgress />;
@@ -55,7 +65,12 @@ function App() {
               width="90"
             />
           </div>
-          {isAuthenticated ? <LogOutButton /> : <LoginButton />}
+          <div className={classes.profile}>
+            <div className={classes.name}>
+              {isAuthenticated ? user.name : null}
+            </div>
+            {isAuthenticated ? <LogOutButton /> : <LoginButton />}
+          </div>
         </div>
       </AppBar>
       {isAuthenticated && (
@@ -85,11 +100,16 @@ function App() {
                 isAuthenticated={isAuthenticated}
                 setCurrentId={setCurrentId}
                 isSearch={isSearch}
+                user={user}
               />
             </Grid>
             {isAuthenticated && (
               <Grid item xs={12} sm={4}>
-                <Form currentId={currentId} setCurrentId={setCurrentId} />
+                <Form
+                  currentId={currentId}
+                  setCurrentId={setCurrentId}
+                  name={user?.name}
+                />
               </Grid>
             )}
           </ConditionalWrapper>

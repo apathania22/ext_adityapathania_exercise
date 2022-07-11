@@ -10,7 +10,10 @@ const LogOutButton = () => {
       variant="contained"
       color="primary"
       fontSize="large"
-      onClick={() => logout({ returnTo: window.location.origin })}
+      onClick={() => {
+        localStorage.removeItem("accessToken");
+        logout({ returnTo: window.location.origin });
+      }}
     />
   );
 };

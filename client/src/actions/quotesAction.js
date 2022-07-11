@@ -25,9 +25,9 @@ export const createQuote = (quote) => async (dispatch) => {
   }
 };
 
-export const updateQuote = (id, post) => async (dispatch) => {
+export const updateQuote = (id, quote) => async (dispatch) => {
   try {
-    const { data } = await api.updateQuote(id, post);
+    const { data } = await api.updateQuote(id, quote);
 
     dispatch({ type: UPDATE_QUOTE, payload: data });
   } catch (error) {

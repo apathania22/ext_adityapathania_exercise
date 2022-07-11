@@ -10,11 +10,10 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
-
 import { deleteQuote } from "../../../actions/quotesAction";
 import useStyles from "./styles";
 
-const Quote = ({ quote, setCurrentId }) => {
+const Quote = ({ quote, setCurrentId, user }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -30,7 +29,7 @@ const Quote = ({ quote, setCurrentId }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      {!quote.public && (
+      {!quote.public && quote.creator === user.name && (
         <CardActions className={classes.cardActions}>
           <Button
             size="small"
