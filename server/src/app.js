@@ -12,11 +12,11 @@ const build = (opts = {}) => {
   // add cors
   app.register(cors);
 
-  // app.register(require('fastify-auth0-verify'), {
-  //   domain: process.env.AUTH0_DOMAIN,
-  //   audience: process.env.AUTH0_AUDIENCE,
-  // });
-  // app.register(authenticate);
+  app.register(require('fastify-auth0-verify'), {
+    domain: process.env.AUTH0_DOMAIN,
+    audience: process.env.AUTH0_AUDIENCE,
+  });
+  app.register(authenticate);
 
   // add db plugin
   app.register(db);
