@@ -1,6 +1,8 @@
 ﻿const dotenv = require('dotenv');
 dotenv.config();
 
+const port = process.env.PORT || 8080;
+
 const server = require('./src/app')({
   logger: {
     level: 'info',
@@ -8,9 +10,8 @@ const server = require('./src/app')({
 });
 
 const start = async () => {
-  console.log(process.env.PORT);
   try {
-    await server.listen(8080, '0.0.0.0');
+    await server.listen({ port, host: '0.0.0.0' });
   } catch (error) {
     server.log.error(error);
     process.exit(1);
