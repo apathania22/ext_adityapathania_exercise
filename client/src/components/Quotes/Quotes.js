@@ -1,22 +1,15 @@
-﻿import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { CircularProgress, Grid } from "@mui/material";
-import QuoteCard from "./QuoteCard/QuoteCard";
+﻿import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { CircularProgress, Grid } from '@mui/material';
+import QuoteCard from './QuoteCard/QuoteCard';
 
 const randomInteger = () => Math.floor(Math.random() * (100 - 1 + 1) + 1);
 
-export default function Quotes({
-  setCurrentId,
-  isAuthenticated,
-  isSearch,
-  user,
-}) {
+export default function Quotes({ setCurrentId, isAuthenticated, isSearch, user }) {
   const [publicQuotes, setPublicData] = useState([]);
   const quotes = useSelector((state) => state.quotes);
   const randomInt = randomInteger();
-
-  console.log(quotes);
 
   useEffect(() => {
     async function fetchData() {
@@ -24,7 +17,7 @@ export default function Quotes({
         const {
           data: { results },
         } = await axios.get(
-          `${process.env.REACT_APP_PUBLIC_AP_URL}${randomInt}`
+          `https://acf-ts-quotes-api-kfu8a.ondigitalocean.app/api/quotes?page=${randomInt}`
         );
         setPublicData(results);
       } catch (err) {
@@ -45,16 +38,13 @@ export default function Quotes({
     <CircularProgress />
   ) : (
     <Grid container alignItems="stretch" spacing={3}>
-      {(isAuthenticated
-        ? isSearch
-          ? quotes
-          : aggregateQuotesData
-        : publicQuotesWithFlag
-      ).map((quote) => (
-        <Grid key={quote.id} item xs={12} sm={6} md={6}>
-          <QuoteCard quote={quote} setCurrentId={setCurrentId} user={user} />
-        </Grid>
-      ))}
+      {(isAuthenticated ? (isSearch ? quotes : aggregateQuotesData) : publicQuotesWithFlag).map(
+        (quote) => (
+          <Grid key={quote.id} item xs={12} sm={6} md={6}>
+            <QuoteCard quote={quote} setCurrentId={setCurrentId} user={user} />
+          </Grid>
+        )
+      )}
     </Grid>
   );
 }

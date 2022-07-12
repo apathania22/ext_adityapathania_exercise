@@ -1,10 +1,9 @@
 ﻿const fastify = require('fastify');
 const dotenv = require('dotenv');
 const cors = require('@fastify/cors');
-const authenticate = require('./plugins/authenticate');
 const db = require('./plugins/db');
 const path = require('path');
-const DistPath = path.join(__dirname, 'client', 'dist');
+const DistPath = path.join(__dirname, 'client', 'build');
 
 dotenv.config();
 
@@ -14,11 +13,11 @@ const build = (opts = {}) => {
   // add cors
   app.register(cors);
 
-  app.register(require('fastify-auth0-verify'), {
-    domain: process.env.AUTH0_DOMAIN,
-    audience: process.env.AUTH0_AUDIENCE,
-  });
-  app.register(authenticate);
+  // add db plugin
+  app.register(db);
+
+  // register routes
+  app.register(require('./routes/quotes'), { prefix: '/api/quotes' });
 
   if (process.env.NODE_ENV === 'production') {
     app.register(require('@fastify/static'), {
@@ -26,16 +25,13 @@ const build = (opts = {}) => {
     });
   }
 
-  // add db plugin
-  app.register(db);
-
-  // register home route
-  app.get('/', (_, reply) => {
-    reply.send({ message: 'Hello! Go to /api/quotes instead' });
+  app.get('/', (request, reply) => {
+    try {
+      reply.sendFile('index.html');
+    } catch (e) {
+      console.log(e);
+    }
   });
-
-  // register routes
-  app.register(require('./routes/quotes'), { prefix: '/api/quotes' });
 
   return app;
 };

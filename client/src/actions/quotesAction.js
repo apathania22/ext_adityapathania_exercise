@@ -1,18 +1,18 @@
-﻿import * as api from "../api";
+﻿import * as api from '../api';
 import {
   FETCH_ALL_QUOTES,
   CREATE_QUOTE,
   DELETE_QUOTE,
   UPDATE_QUOTE,
   FETCH_FILTERED_QUOTES,
-} from "../constants/actionTypes";
+} from '../constants/actionTypes';
 
 export const getQuotes = () => async (dispatch) => {
   try {
     const { data } = await api.getQuotes();
     dispatch({ type: FETCH_ALL_QUOTES, payload: data });
   } catch (error) {
-    alert(error.response.data.errorMessage);
+    console.log(error.message);
   }
 };
 

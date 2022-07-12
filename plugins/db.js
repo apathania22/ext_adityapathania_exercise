@@ -1,9 +1,11 @@
-﻿const fp = require('fastify-plugin');
+﻿const dotenv = require('dotenv');
+const fp = require('fastify-plugin');
 const mongoose = require('mongoose');
+dotenv.config();
 
 const db = async (fastify, options, next) => {
   try {
-    mongoose.connect(process.env.CONNECTION_URL, {
+    mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

@@ -1,14 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useDispatch } from "react-redux";
-import {
-  AppBar,
-  Grow,
-  Grid,
-  Container,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useDispatch } from 'react-redux';
+import { AppBar, Grow, Grid, Container, Typography, CircularProgress } from '@mui/material';
 import {
   Form,
   Quotes,
@@ -16,25 +9,24 @@ import {
   LoginButton,
   LogOutButton,
   ConditionalWrapper,
-} from "./components";
-import image from "./images/download.png";
-import { getQuotes } from "./actions/quotesAction";
-import useStyles from "./styles";
+} from './components';
+import image from './images/download.png';
+import { getQuotes } from './actions/quotesAction';
+import useStyles from './styles';
 
 function App() {
   const dispatch = useDispatch();
-  const { isAuthenticated, isLoading, getAccessTokenSilently, user } =
-    useAuth0();
+  const { isAuthenticated, isLoading, getAccessTokenSilently, user } = useAuth0();
   const [currentId, setCurrentId] = useState(null);
   const [isSearch, setIsSearch] = useState(false);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const classes = useStyles();
 
   useEffect(() => {
     const getPrivateQuotes = async () => {
       try {
         const accessToken = await getAccessTokenSilently();
-        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem('accessToken', accessToken);
         if (!query) {
           dispatch(getQuotes());
         }
@@ -57,40 +49,21 @@ function App() {
             <Typography className={classes.heading} variant="h2" align="center">
               Quotes Hub
             </Typography>
-            <img
-              className={classes.image}
-              src={image}
-              alt="icon"
-              height="60"
-              width="90"
-            />
+            <img className={classes.image} src={image} alt="icon" height="60" width="90" />
           </div>
           <div className={classes.profile}>
-            <div className={classes.name}>
-              {isAuthenticated ? user.name : null}
-            </div>
+            <div className={classes.name}>{isAuthenticated ? user.name : null}</div>
             {isAuthenticated ? <LogOutButton /> : <LoginButton />}
           </div>
         </div>
       </AppBar>
-      {isAuthenticated && (
-        <SearchBar
-          query={query}
-          setIsSearch={setIsSearch}
-          setQuery={setQuery}
-        />
-      )}
+      {isAuthenticated && <SearchBar query={query} setIsSearch={setIsSearch} setQuery={setQuery} />}
       <Grow in>
         <Container>
           <ConditionalWrapper
             condition={isAuthenticated}
             wrapper={(children) => (
-              <Grid
-                container
-                justify="space-between"
-                alignItems="stretch"
-                spacing={3}
-              >
+              <Grid container justify="space-between" alignItems="stretch" spacing={3}>
                 {children}
               </Grid>
             )}
@@ -105,11 +78,7 @@ function App() {
             </Grid>
             {isAuthenticated && (
               <Grid item xs={12} sm={4}>
-                <Form
-                  currentId={currentId}
-                  setCurrentId={setCurrentId}
-                  name={user?.name}
-                />
+                <Form currentId={currentId} setCurrentId={setCurrentId} name={user?.name} />
               </Grid>
             )}
           </ConditionalWrapper>

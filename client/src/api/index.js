@@ -1,10 +1,10 @@
-﻿import axios from "axios";
+﻿import axios from 'axios';
 
-const API = axios.create({ baseURL: "http://localhost:8080" });
+const API = axios.create({ baseURL: 'https://ext-adityapathania-exercise.herokuapp.com/api' });
 
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -15,10 +15,8 @@ API.interceptors.request.use(
   }
 );
 
-export const getQuotes = () => API.get("/api/quotes");
-export const getFilteredQuotes = (authorName) =>
-  API.get(`/api/quotes?authorName=${authorName}`);
-export const createQuote = (newQuote) => API.post("/api/quotes", newQuote);
-export const updateQuote = (id, updatedQuote) =>
-  API.put(`/api/quotes/${id}`, updatedQuote);
-export const deleteQuote = (id) => API.delete(`/api/quotes/${id}`);
+export const getQuotes = () => API.get('/quotes');
+export const getFilteredQuotes = (authorName) => API.get(`/quotes?authorName=${authorName}`);
+export const createQuote = (newQuote) => API.post('/quotes', newQuote);
+export const updateQuote = (id, updatedQuote) => API.put(`/quotes/${id}`, updatedQuote);
+export const deleteQuote = (id) => API.delete(`/quotes/${id}`);
