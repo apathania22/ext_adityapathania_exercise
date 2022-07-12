@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const cors = require('@fastify/cors');
 const authenticate = require('./plugins/authenticate');
 const db = require('./plugins/db');
+const path = require('path');
+const DistPath = path.join(__dirname, 'client', 'dist');
 
 dotenv.config();
 
@@ -17,6 +19,12 @@ const build = (opts = {}) => {
     audience: process.env.AUTH0_AUDIENCE,
   });
   app.register(authenticate);
+
+  if (process.env.NODE_ENV === 'production') {
+    app.register(require('@fastify/static'), {
+      root: DistPath,
+    });
+  }
 
   // add db plugin
   app.register(db);
