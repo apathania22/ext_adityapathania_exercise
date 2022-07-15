@@ -22,6 +22,7 @@ root.render(
     clientId={clientId}
     audience={audience}
     redirectUri={window.location.origin}
+    useRefreshTokens={true}
   >
     <Provider store={store}>
       <App />

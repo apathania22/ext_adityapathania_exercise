@@ -1,15 +1,45 @@
 ﻿import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { CircularProgress, Grid } from '@mui/material';
 import QuoteCard from './QuoteCard/QuoteCard';
+import { getQuotes } from './../../actions/quotesAction';
 
 const randomInteger = () => Math.floor(Math.random() * (100 - 1 + 1) + 1);
 
-export default function Quotes({ setCurrentId, isAuthenticated, isSearch, user }) {
+export default function Quotes({
+  setCurrentId,
+  isAuthenticated,
+  isSearch,
+  user,
+  query,
+  currentId,
+  getAccessTokenSilently,
+}) {
+  const dispatch = useDispatch();
   const [publicQuotes, setPublicData] = useState([]);
+
   const quotes = useSelector((state) => state.quotes);
   const randomInt = randomInteger();
+
+  useEffect(() => {
+    const getPrivateQuotes = async () => {
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: process.env.REACT_APP_AUDIENCE,
+        });
+        localStorage.setItem('accessToken', accessToken);
+
+        if (!query && isAuthenticated) {
+          dispatch(getQuotes());
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    getPrivateQuotes();
+  }, [isAuthenticated, getAccessTokenSilently, currentId, dispatch, query]);
 
   useEffect(() => {
     async function fetchData() {

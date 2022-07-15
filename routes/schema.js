@@ -1,4 +1,5 @@
-﻿const {
+﻿const { default: fastify } = require('fastify');
+const {
   getQuotes,
   createQuote,
   getQuoteById,
@@ -52,9 +53,18 @@ const createQuoteOpts = {
         creator: { type: 'string' },
       },
     },
+
     response: {
       201: Quote,
     },
+  },
+  onRequest: async (request, reply, done) => {
+    try {
+      await request.jwtVerify();
+      done();
+    } catch (err) {
+      reply.send(err);
+    }
   },
   handler: createQuote,
 };
@@ -71,6 +81,14 @@ const deleteQuoteOpts = {
       },
     },
   },
+  onRequest: async (request, reply, done) => {
+    try {
+      await request.jwtVerify();
+      done();
+    } catch (err) {
+      reply.send(err);
+    }
+  },
   handler: deleteQuote,
 };
 
@@ -80,6 +98,14 @@ const updateQuoteOpts = {
     response: {
       200: Quote,
     },
+  },
+  onRequest: async (request, reply, done) => {
+    try {
+      await request.jwtVerify();
+      done();
+    } catch (err) {
+      reply.send(err);
+    }
   },
   handler: updateQuote,
 };
